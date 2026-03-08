@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HYPOMNEMA — Classical Language Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0a0f;
+    --surface:  #11111a;
+    --border:   rgba(255,255,255,0.07);
+    --text:     #e8e4dc;
+    --muted:    rgba(232,228,220,0.4);
+    --gold:     #c9a84c;
+    --gold-dim: rgba(201,168,76,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Starfield background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 8%,  rgba(255,255,255,0.2)  0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 35%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.2)  0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 42%, rgba(255,255,255,0.18) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 72%, rgba(255,255,255,0.12) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 88%, rgba(255,255,255,0.2)  0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 78%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 92%, rgba(255,255,255,0.1)  0%, transparent 100%),
+      radial-gradient(2px 2px at 5%  25%, rgba(201,168,76,0.3)   0%, transparent 100%),
+      radial-gradient(2px 2px at 95% 55%, rgba(201,168,76,0.2)   0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Gold radial glow behind hero ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Layout ── */
+  .page { position: relative; z-index: 1; }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    padding: 80px 20px 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .header-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .header-rule-line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .header-rule-ornament {
+    color: var(--gold);
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  .site-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    opacity: 0.7;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-style: italic;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 12px;
+    line-height: 1.6;
+  }
+
+  .latin-motto {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    opacity: 0.5;
+    text-transform: uppercase;
+  }
+
+  /* ── Language grid ── */
+  .grid-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── Language card ── */
+  .lang-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+  }
+
+  .lang-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  /* Coloured top border per language */
+  .lang-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.7;
+    transition: opacity 0.25s;
+  }
+  .lang-card:hover::before { opacity: 1; }
+
+  /* Subtle coloured glow in corner */
+  .lang-card::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Bottom rule ── */
+  footer {
+    text-align: center;
+    padding: 30px 20px 50px;
+    border-top: 1px solid var(--border);
+  }
+  footer p {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── Fade-in on load ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  header   { animation: fadeUp 0.7s ease both; }
+  .lang-card:nth-child(1) { animation: fadeUp 0.7s 0.15s ease both; }
+  .lang-card:nth-child(2) { animation: fadeUp 0.7s 0.25s ease both; }
+  .lang-card:nth-child(3) { animation: fadeUp 0.7s 0.35s ease both; }
+  .lang-card:nth-child(4) { animation: fadeUp 0.7s 0.45s ease both; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="header-rule">
+      <div class="header-rule-line"></div>
+      <div class="header-rule-ornament">✦</div>
+      <div class="header-rule-line"></div>
+    </div>
+    <div class="site-label">Classical Language Studies</div>
+    <h1>HYPOMNEMA</h1>
+    <p class="subtitle">Learning applications for the classical languages.</p>
+    <div class="latin-motto"></div>
+  </header>
+
+  <main class="grid-section">
+    <div class="section-label">Choose a Language</div>
+    <div class="lang-grid">
+
+      <!-- Latin -->
+      <a class="lang-card" href="latin.html"
+         style="--accent:#c9a84c; --accent-glow:rgba(201,168,76,0.12);">
+        <img src="latin.png" alt="Latin" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </a>
+
+      <!-- Greek -->
+      <a class="lang-card" href="greek.html"
+         style="--accent:#7ec8f0; --accent-glow:rgba(126,200,240,0.1);">
+        <img src="greek.png" alt="Ancient Greek" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </a>
+
+      <!-- Sanskrit -->
+      <a class="lang-card" href="sanskrit.html"
+         style="--accent:#c4a0f0; --accent-glow:rgba(196,160,240,0.1);">
+        <img src="sanskrit.png" alt="Sanskrit" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </a>
+
+      <!-- Classical Chinese -->
+      <a class="lang-card" href="chinese.html"
+         style="--accent:#d4a840; --accent-glow:rgba(212,168,64,0.1);">
+        <img src="chinese.png" alt="Classical Chinese" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Repetitio est mater studiōrum</p>
+  </footer>
+
+</div>
+</body>
+</html>
